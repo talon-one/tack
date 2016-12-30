@@ -17,7 +17,6 @@ variable "instance-type" {}
 variable "internal-tld" {}
 variable "key-name" {}
 variable "name" {}
-variable "region" {}
 variable "security-group-id" {}
 variable "subnet-ids" {}
 variable "volume_size" {
@@ -28,6 +27,9 @@ variable "volume_size" {
 }
 variable "vpc-id" {}
 variable "worker-name" {}
+variable "root-cert" {}
+variable "worker-cert" {}
+variable "worker-key" {}
 
 output "autoscaling-group-name" { value = "${ aws_autoscaling_group.worker.name }" }
 output "depends-id" { value = "${ null_resource.dummy_dependency.id }" }

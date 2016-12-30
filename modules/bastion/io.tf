@@ -1,5 +1,4 @@
 variable "ami-id" {}
-variable "region" {}
 variable "bucket-prefix" {}
 variable "cidr-allow-ssh" {}
 variable "depends-id" {}
@@ -10,6 +9,9 @@ variable "name" {}
 variable "security-group-id" {}
 variable "subnet-ids" {}
 variable "vpc-id" {}
+variable "root-cert" {}
+variable "etcd-cert" {}
+variable "etcd-key" {}
 
 output "depends-id" { value = "${null_resource.dummy_dependency.id}" }
 output "ip" { value = "${ aws_instance.bastion.public_ip }" }

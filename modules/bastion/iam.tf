@@ -1,3 +1,4 @@
+/*
 resource "aws_iam_role" "bastion" {
   name = "bastion-k8s-${ var.name }"
   assume_role_policy = <<EOS
@@ -40,3 +41,4 @@ resource "aws_iam_role_policy" "bastion" {
 }
 EOS
 }
+*/
