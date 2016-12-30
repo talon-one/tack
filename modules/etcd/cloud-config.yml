@@ -124,7 +124,7 @@ write-files:
     owner: root
     content: ${ jsonencode(apiserver-cert) }
 
-  - path: ${ cert-path }/apiserver.pem
+  - path: ${ cert-path }/apiserver-key.pem
     permissions: "0644"
     owner: root
     content: ${ jsonencode(apiserver-key) }
