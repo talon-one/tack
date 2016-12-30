@@ -3,8 +3,9 @@ data "template_file" "user-data" {
 
   vars {
     internal-tld = "${ var.internal-tld }"
-    bucket = "${ var.bucket-prefix }"
-    region = "${ var.region }"
-    ssl-tar = "/ssl/k8s-etcd.tar"
+    cert-path = "/etc/kubernetes/ssl"
+    root-cert = "${ var.root-cert }"
+    etcd-cert = "${ var.etcd-cert }"
+    etcd-key = "${ var.etcd-key }"
   }
 }

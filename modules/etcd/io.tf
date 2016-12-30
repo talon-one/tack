@@ -14,11 +14,16 @@ variable "internal-tld" {}
 variable "key-name" {}
 variable "name" {}
 variable "pod-ip-range" {}
-variable "region" {}
 variable "service-cluster-ip-range" {}
 variable "subnet-ids-private" {}
 variable "subnet-ids-public" {}
 variable "vpc-id" {}
+
+variable "root-cert" {}
+variable "etcd-cert" {}
+variable "apiserver-cert" {}
+variable "etcd-key" {}
+variable "apiserver-key" {}
 
 output "depends-id" { value = "${ null_resource.dummy_dependency.id }" }
 output "external-elb" { value = "${ aws_elb.external.dns_name }" }

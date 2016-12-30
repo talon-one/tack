@@ -11,6 +11,13 @@ module "s3" {
   service-cluster-ip-range = "${ var.cidr["service-cluster"] }"
 }
 
+module "certs" {
+  source = "./modules/certs"
+  aws-region = "${ var.aws["region"] }"
+  internal-tld = "${ var.internal-tld }"
+  k8s-service-ip = "${ var.k8s-service-ip }"
+}
+
 module "vpc" {
   source = "./modules/vpc"
   depends-id = ""
@@ -33,7 +40,7 @@ module "security" {
 
 module "iam" {
   source = "./modules/iam"
-  depends-id = "${ module.s3.depends-id }"
+  depends-id = ""
 
   bucket-prefix = "${ var.s3-bucket }"
   name = "${ var.name }"
@@ -68,11 +75,17 @@ module "etcd" {
   key-name = "${ var.aws["key-name"] }"
   name = "${ var.name }"
   pod-ip-range = "${ var.cidr["pods"] }"
-  region = "${ var.aws["region"] }"
   service-cluster-ip-range = "${ var.cidr["service-cluster"] }"
   subnet-ids-private = "${ module.vpc.subnet-ids-private }"
   subnet-ids-public = "${ module.vpc.subnet-ids-public }"
   vpc-id = "${ module.vpc.id }"
+
+  root-cert = "${ module.certs.root-cert }"
+  etcd-cert = "${ module.certs.etcd-cert }"
+  apiserver-cert = "${ module.certs.apiserver-cert }"
+
+  etcd-key = "${ module.certs.etcd-key }"
+  apiserver-key = "${ module.certs.apiserver-key }"
 }
 
 module "bastion" {
@@ -86,10 +99,12 @@ module "bastion" {
   internal-tld = "${ var.internal-tld }"
   key-name = "${ var.aws["key-name"] }"
   name = "${ var.name }"
-  region = "${ var.aws["region"] }"
   security-group-id = "${ module.security.bastion-id }"
   subnet-ids = "${ module.vpc.subnet-ids-public }"
   vpc-id = "${ module.vpc.id }"
+  root-cert = "${ module.certs.root-cert }"
+  etcd-cert = "${ module.certs.etcd-cert }"
+  etcd-key = "${ module.certs.etcd-key }"
 }
 
 module "worker" {
@@ -112,7 +127,6 @@ module "worker" {
   internal-tld = "${ var.internal-tld }"
   key-name = "${ var.aws["key-name"] }"
   name = "${ var.name }"
-  region = "${ var.aws["region"] }"
   security-group-id = "${ module.security.worker-id }"
   subnet-ids = "${ module.vpc.subnet-ids-private }"
   volume_size = {
@@ -121,6 +135,9 @@ module "worker" {
   }
   vpc-id = "${ module.vpc.id }"
   worker-name = "general"
+  root-cert = "${ module.certs.root-cert }"
+  worker-cert = "${ module.certs.worker-cert }"
+  worker-key = "${ module.certs.worker-key }"
 }
 
 /*
@@ -129,7 +146,6 @@ module "worker2" {
   depends-id = "${ module.route53.depends-id }"
 
   ami-id = "${ var.coreos-aws["ami"] }"
-  bucket-prefix = "${ var.s3-bucket }"
   capacity = {
     desired = 2
     max = 2
@@ -143,7 +159,6 @@ module "worker2" {
   internal-tld = "${ var.internal-tld }"
   key-name = "${ var.aws["key-name"] }"
   name = "${ var.name }"
-  region = "${ var.aws["region"] }"
   security-group-id = "${ module.security.worker-id }"
   subnet-ids = "${ module.vpc.subnet-ids-private }"
   volume_size = {
@@ -152,15 +167,17 @@ module "worker2" {
   }
   vpc-id = "${ module.vpc.id }"
   worker-name = "special"
+  certs = "${ module.certs.certs }"
+  keys = "${ module.certs.keys }"
 }
 */
 
 module "kubeconfig" {
   source = "./modules/kubeconfig"
 
-  admin-key-pem = ".cfssl/k8s-admin-key.pem"
-  admin-pem = ".cfssl/k8s-admin.pem"
-  ca-pem = ".cfssl/ca.pem"
+  root-cert = "${ module.certs.root-cert }"
+  admin-cert = "${ module.certs.admin-cert }"
+  admin-key = "${ module.certs.admin-key }"
   master-elb = "${ module.etcd.external-elb }"
   name = "${ var.name }"
 }

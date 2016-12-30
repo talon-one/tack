@@ -3,7 +3,6 @@ data "template_file" "cloud-config" {
   template = "${ file( "${ path.module }/cloud-config.yml" )}"
 
   vars {
-    bucket = "${ var.bucket-prefix }"
     cluster-domain = "${ var.cluster-domain }"
     cluster-token = "etcd-cluster-${ var.name }"
     dns-service-ip = "${ var.dns-service-ip }"
@@ -15,8 +14,13 @@ data "template_file" "cloud-config" {
     hyperkube-tag = "${ var.hyperkube-tag }"
     internal-tld = "${ var.internal-tld }"
     pod-ip-range = "${ var.pod-ip-range }"
-    region = "${ var.region }"
     service-cluster-ip-range = "${ var.service-cluster-ip-range }"
-    ssl-tar = "ssl/k8s-apiserver.tar"
+    cert-path = "/etc/kubernetes/ssl"
+    root-cert = "${ var.root-cert }"
+    etcd-cert = "${ var.etcd-cert }"
+    apiserver-cert = "${ var.apiserver-cert }"
+
+    etcd-key = "${ var.etcd-key }"
+    apiserver-key = "${ var.apiserver-key }"
   }
 }

@@ -1,6 +1,6 @@
-variable "admin-key-pem" {}
-variable "admin-pem" {}
-variable "ca-pem" {}
+variable "admin-key" {}
+variable "admin-cert" {}
+variable "root-cert" {}
 variable "master-elb" {}
 variable "name" {}
 
