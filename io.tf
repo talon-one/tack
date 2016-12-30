@@ -59,6 +59,7 @@ output "bastion-ip" { value = "${ module.bastion.ip }" }
 output "cluster-domain" { value = "${ var.cluster-domain }" }
 output "dns-service-ip" { value = "${ var.dns-service-ip }" }
 output "etcd1-ip" { value = "${ element( split(",", var.etcd-ips), 0 ) }" }
+output "nat-public-ip" { value = "${ module.vpc.nat-public-ip }" }
 output "external-elb" { value = "${ module.etcd.external-elb }" }
 output "internal-tld" { value = "${ var.internal-tld }" }
 output "name" { value = "${ var.name }" }
