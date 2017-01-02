@@ -17,14 +17,15 @@ resource "aws_launch_configuration" "worker" {
   }
 
   security_groups = [
+    "${ aws_security_group.kubernetes_elb_ingress.id }",
     "${ var.security-group-id }",
   ]
 
   user_data = "${ data.template_file.cloud-config.rendered }"
 
-  /*lifecycle {
+  lifecycle {
     create_before_destroy = true
-  }*/
+  }
 }
 
 resource "aws_autoscaling_group" "worker" {
@@ -38,6 +39,10 @@ resource "aws_autoscaling_group" "worker" {
   max_size = "${ var.capacity["max"] }"
   min_size = "${ var.capacity["min"] }"
   vpc_zone_identifier = [ "${ split(",", var.subnet-ids) }" ]
+
+  lifecycle {
+    create_before_destroy = true
+  }
 
   tag {
     key = "builtWith"
